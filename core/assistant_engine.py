@@ -76,6 +76,8 @@ class AssistantEngine:
             return ""
         self._set_state("Thinking")
         self.publish("user", incoming)
+        if self.security_should_lock():
+            self.is_locked = True
         if self.is_locked:
             response = "Security lock active hai. Authorized passphrase aur voice verification required."
             self.speak(response, emotion="serious")
@@ -134,7 +136,7 @@ class AssistantEngine:
             return "Goodbye. ARIA standby mode me chali gayi."
 
         if "weather" in text.lower() or "mausam" in text.lower():
-            return self.system.weather()
+            return self.system.weather(self.config.default_city)
         if "motivate" in text.lower():
             return "Tum strong ho. Chhote steps bhi progress hote hain. Aaj ka ek win choose karo, main saath hoon."
         if "pdf" in text.lower():

@@ -42,6 +42,7 @@ class AriaConfig:
     male_voice: str = "en-US-GuyNeural"
     female_voice: str = "en-IN-NeerjaNeural"
     default_theme: str = "dark"
+    default_city: str = "New Delhi"
     max_security_failures: int = 3
     continuous_mode: bool = True
 

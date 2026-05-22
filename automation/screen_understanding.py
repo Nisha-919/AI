@@ -60,9 +60,13 @@ class ScreenUnderstanding:
 
     @staticmethod
     def active_window_title() -> Optional[str]:
-        if hasattr(cv2, "getWindowProperty"):
+        try:
+            import win32gui
+
+            handle = win32gui.GetForegroundWindow()
+            return win32gui.GetWindowText(handle) or None
+        except Exception:
             return None
-        return None
 
     @staticmethod
     def detect_code_likelihood(text: str) -> float:

@@ -25,6 +25,8 @@ class TextToSpeechEngine:
         self._running = True
         self._pyttsx3 = pyttsx3.init()
         self._profile_voice = ""
+        self._pygame_ready = False
+        self._init_pygame()
         self._worker = threading.Thread(target=self._worker_loop, daemon=True, name="TTS-Worker")
         self._worker.start()
 
@@ -46,7 +48,19 @@ class TextToSpeechEngine:
             if not self._speak_edge_tts(request):
                 self._speak_pyttsx3(request)
 
+    def _init_pygame(self) -> None:
+        try:
+            import pygame
+
+            pygame.mixer.init()
+            self._pygame_ready = True
+        except Exception:
+            self._pygame_ready = False
+
     def _speak_edge_tts(self, request: SpeechRequest) -> bool:
+        if not self._pygame_ready:
+            return False
+        audio_path: Optional[Path] = None
         try:
             import edge_tts
             import pygame
@@ -60,17 +74,16 @@ class TextToSpeechEngine:
                 return temp_path
 
             audio_path = asyncio.run(_generate())
-            try:
-                pygame.mixer.init()
-                pygame.mixer.music.load(str(audio_path))
-                pygame.mixer.music.play()
-                while pygame.mixer.music.get_busy():
-                    pygame.time.Clock().tick(20)
-            finally:
-                audio_path.unlink(missing_ok=True)
+            pygame.mixer.music.load(str(audio_path))
+            pygame.mixer.music.play()
+            while pygame.mixer.music.get_busy():
+                pygame.time.Clock().tick(20)
             return True
         except Exception:
             return False
+        finally:
+            if audio_path is not None:
+                audio_path.unlink(missing_ok=True)
 
     def _speak_pyttsx3(self, request: SpeechRequest) -> None:
         rate = 168
