@@ -39,7 +39,7 @@ class OrbWidget(QWidget):
         self._phase += 0.11
         self.update()
 
-    def paintEvent(self, event):  # noqa: N802
+    def paintEvent(self, _event):  # noqa: N802
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.fillRect(self.rect(), QColor(8, 16, 30))

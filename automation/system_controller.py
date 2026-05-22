@@ -109,7 +109,6 @@ class SystemController:
         webbrowser.open(f"https://www.youtube.com/results?search_query={query}")
         return f"YouTube par '{query}' search kar diya."
 
-    @staticmethod
     def weather(self, city: str = "New Delhi") -> str:
         try:
             response = requests.get(f"https://wttr.in/{city}?format=3", timeout=self.weather_timeout)
