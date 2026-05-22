@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import webbrowser
 from pathlib import Path
@@ -59,7 +60,9 @@ class SystemController:
             try:
                 import winreg
 
-                safe_app_name = app_name.replace("\\", "").replace("/", "").replace("..", "").strip()
+                safe_app_name = re.sub(r"[^a-zA-Z0-9._ -]", "", app_name).strip()
+                if not safe_app_name:
+                    return None
                 registry_roots = [winreg.HKEY_CURRENT_USER, winreg.HKEY_LOCAL_MACHINE]
                 for root in registry_roots:
                     key_path = rf"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{safe_app_name}.exe"

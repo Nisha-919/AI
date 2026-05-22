@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -63,6 +64,8 @@ class ScreenUnderstanding:
 
     @staticmethod
     def active_window_title() -> Optional[str]:
+        if os.name != "nt":
+            return None
         try:
             import win32gui
 

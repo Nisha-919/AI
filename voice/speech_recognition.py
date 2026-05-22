@@ -63,9 +63,14 @@ class RealtimeSpeechRecognizer:
     def _transcribe(self, audio: np.ndarray) -> str:
         if self.whisper_model is None:
             return ""
-        temp_wav = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
-        temp_path = Path(temp_wav.name)
-        temp_wav.close()
+        fd, temp_name = tempfile.mkstemp(suffix=".wav")
+        temp_path = Path(temp_name)
+        try:
+            import os
+
+            os.close(fd)
+        except OSError:
+            pass
         try:
             sf.write(temp_path, audio, self.sample_rate)
             result = self.whisper_model.transcribe(str(temp_path), language=None, fp16=self.whisper_fp16)

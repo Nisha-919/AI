@@ -106,7 +106,7 @@ class AssistantEngine:
         if intent == "play_music":
             return "Spotify control module ready hai. 'Spotify play <song>' bolo."
         if intent == "screenshot":
-            output = self.config.data_dir / f"screenshot_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.png"
+            output = self.config.data_dir / f"screenshot_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')}.png"
             return self.system.capture_screenshot(output)
         if intent == "screen_summary":
             output = self.config.data_dir / "latest_screen.png"

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 import queue
 import tempfile
 import threading
@@ -66,9 +67,9 @@ class TextToSpeechEngine:
             import pygame
 
             async def _generate() -> Path:
-                temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
-                temp_path = Path(temp_file.name)
-                temp_file.close()
+                fd, temp_name = tempfile.mkstemp(suffix=".mp3")
+                os.close(fd)
+                temp_path = Path(temp_name)
                 try:
                     communicate = edge_tts.Communicate(
                         text=request.text, voice=request.voice or self._profile_voice
