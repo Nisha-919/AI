@@ -12,7 +12,8 @@ class IntentResult:
 
 
 class CommandBrain:
-    def __init__(self) -> None:
+    def __init__(self, min_confidence: float = 0.18) -> None:
+        self.min_confidence = min_confidence
         self.intent_map: Dict[str, List[str]] = {
             "open_app": ["open", "launch", "khol", "kholo", "start"],
             "open_website": ["website", "site", "browser", "open"],
@@ -53,7 +54,11 @@ class CommandBrain:
         ]
         best_intent, confidence = max(scored, key=lambda item: item[1], default=("unknown", 0.0))
         entities = self._extract_entities(query, best_intent)
-        return IntentResult(intent=best_intent if confidence > 0.18 else "unknown", confidence=confidence, entities=entities)
+        return IntentResult(
+            intent=best_intent if confidence > self.min_confidence else "unknown",
+            confidence=confidence,
+            entities=entities,
+        )
 
     @staticmethod
     def _extract_entities(query: str, intent: str) -> Dict[str, str]:

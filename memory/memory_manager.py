@@ -8,8 +8,9 @@ from typing import Any, Dict, List, Optional
 
 
 class MemoryManager:
-    def __init__(self, db_path: Path):
+    def __init__(self, db_path: Path, default_context_window: int = 12):
         self.db_path = db_path
+        self.default_context_window = default_context_window
         self._init_db()
 
     def _connect(self) -> sqlite3.Connection:
@@ -73,11 +74,12 @@ class MemoryManager:
                 (role, text, language, emotion, self._now()),
             )
 
-    def get_recent_conversation(self, limit: int = 12) -> List[Dict[str, Any]]:
+    def get_recent_conversation(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+        effective_limit = limit or self.default_context_window
         with self._connect() as conn:
             rows = conn.execute(
                 "SELECT role, text, language, emotion, created_at FROM conversations ORDER BY id DESC LIMIT ?",
-                (limit,),
+                (effective_limit,),
             ).fetchall()
         return [dict(row) for row in reversed(rows)]
 

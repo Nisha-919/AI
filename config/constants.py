@@ -43,6 +43,12 @@ class AriaConfig:
     female_voice: str = "en-IN-NeerjaNeural"
     default_theme: str = "dark"
     default_city: str = "New Delhi"
+    default_tts_voice: str = "en-IN-NeerjaNeural"
+    min_intent_confidence: float = 0.18
+    security_window_minutes: int = 15
+    memory_context_window: int = 12
+    weather_api_timeout: int = 7
+    whisper_fp16: bool = False
     max_security_failures: int = 3
     continuous_mode: bool = True
 

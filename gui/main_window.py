@@ -17,6 +17,10 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+PULSE_AMPLITUDE = 0.1
+LISTENING_SPEED = 2.4
+DEFAULT_SPEED = 1.2
+
 
 class OrbWidget(QWidget):
     def __init__(self):
@@ -41,7 +45,9 @@ class OrbWidget(QWidget):
         painter.fillRect(self.rect(), QColor(8, 16, 30))
 
         radius = min(self.width(), self.height()) * 0.23
-        pulse = 1.0 + 0.1 * math.sin(self._phase * (2.4 if self._state == "Listening" else 1.2))
+        pulse = 1.0 + PULSE_AMPLITUDE * math.sin(
+            self._phase * (LISTENING_SPEED if self._state == "Listening" else DEFAULT_SPEED)
+        )
         color_map = {
             "Idle": QColor(71, 130, 255),
             "Listening": QColor(0, 255, 234),

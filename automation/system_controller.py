@@ -12,8 +12,9 @@ from memory.memory_manager import MemoryManager
 
 
 class SystemController:
-    def __init__(self, memory: MemoryManager):
+    def __init__(self, memory: MemoryManager, weather_timeout: int = 7):
         self.memory = memory
+        self.weather_timeout = weather_timeout
 
     @staticmethod
     def _open_with_shell(target: str) -> bool:
@@ -109,9 +110,9 @@ class SystemController:
         return f"YouTube par '{query}' search kar diya."
 
     @staticmethod
-    def weather(city: str = "New Delhi") -> str:
+    def weather(self, city: str = "New Delhi") -> str:
         try:
-            response = requests.get(f"https://wttr.in/{city}?format=3", timeout=7)
+            response = requests.get(f"https://wttr.in/{city}?format=3", timeout=self.weather_timeout)
             response.raise_for_status()
             return response.text.strip()
         except Exception:

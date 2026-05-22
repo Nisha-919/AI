@@ -20,18 +20,20 @@ class AssistantEngine:
         self.config = config
         self.logger = logger
         self.on_event = on_event or (lambda event, payload: None)
-        self.memory = MemoryManager(config.db_path)
-        self.command_brain = CommandBrain()
-        self.system = SystemController(self.memory)
+        self.memory = MemoryManager(config.db_path, default_context_window=config.memory_context_window)
+        self.command_brain = CommandBrain(min_confidence=config.min_intent_confidence)
+        self.system = SystemController(self.memory, weather_timeout=config.weather_api_timeout)
         self.screen = ScreenUnderstanding()
-        self.tts = TextToSpeechEngine()
+        self.tts = TextToSpeechEngine(default_voice=config.default_tts_voice)
         self.voice_auth = VoiceAuthenticator(threshold=config.auth_threshold)
         self.state = "Idle"
         self.is_locked = False
         self.failed_attempts = 0
         self.current_voice = config.voice_profiles["friendly"].tts_voice
         self.tts.set_voice(self.current_voice)
-        self.recognizer = RealtimeSpeechRecognizer(config.wake_words, self._handle_raw_speech)
+        self.recognizer = RealtimeSpeechRecognizer(
+            config.wake_words, self._handle_raw_speech, whisper_fp16=config.whisper_fp16
+        )
 
     def start(self) -> None:
         self._set_state("Listening")
@@ -151,5 +153,7 @@ class AssistantEngine:
         return pdfs[0] if pdfs else None
 
     def security_should_lock(self) -> bool:
-        horizon = (datetime.now(timezone.utc) - timedelta(minutes=15)).isoformat()
+        horizon = (
+            datetime.now(timezone.utc) - timedelta(minutes=self.config.security_window_minutes)
+        ).isoformat()
         return self.memory.security_failures_since(horizon) >= self.config.max_security_failures

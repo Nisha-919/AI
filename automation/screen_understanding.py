@@ -7,6 +7,9 @@ import cv2
 import numpy as np
 from PyPDF2 import PdfReader
 
+HIST_BINS = [8, 8, 8]
+HIST_RANGES = [0, 256, 0, 256, 0, 256]
+
 
 class ScreenUnderstanding:
     def __init__(self):
@@ -80,6 +83,6 @@ class ScreenUnderstanding:
         if image is None:
             return None
         resized = cv2.resize(image, (64, 64))
-        hist = cv2.calcHist([resized], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+        hist = cv2.calcHist([resized], [0, 1, 2], None, HIST_BINS, HIST_RANGES)
         normalized = cv2.normalize(hist, hist).flatten()
         return normalized

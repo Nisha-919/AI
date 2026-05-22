@@ -20,11 +20,11 @@ class SpeechRequest:
 
 
 class TextToSpeechEngine:
-    def __init__(self):
+    def __init__(self, default_voice: str = "en-IN-NeerjaNeural"):
         self._queue: queue.Queue[SpeechRequest] = queue.Queue()
         self._running = True
         self._pyttsx3 = pyttsx3.init()
-        self._profile_voice = ""
+        self._profile_voice = default_voice
         self._pygame_ready = False
         self._init_pygame()
         self._worker = threading.Thread(target=self._worker_loop, daemon=True, name="TTS-Worker")
@@ -69,7 +69,7 @@ class TextToSpeechEngine:
                 temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
                 temp_path = Path(temp_file.name)
                 temp_file.close()
-                communicate = edge_tts.Communicate(text=request.text, voice=request.voice or "en-IN-NeerjaNeural")
+                communicate = edge_tts.Communicate(text=request.text, voice=request.voice or self._profile_voice)
                 await communicate.save(str(temp_path))
                 return temp_path
 

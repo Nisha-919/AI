@@ -18,11 +18,13 @@ class RealtimeSpeechRecognizer:
         on_text: Callable[[str], None],
         sample_rate: int = 16000,
         chunk_seconds: float = 3.2,
+        whisper_fp16: bool = False,
     ):
         self.wake_words = [word.lower() for word in wake_words]
         self.on_text = on_text
         self.sample_rate = sample_rate
         self.chunk_seconds = chunk_seconds
+        self.whisper_fp16 = whisper_fp16
         self._running = False
         self._listener_thread: Optional[threading.Thread] = None
         self._queue: queue.Queue[np.ndarray] = queue.Queue(maxsize=20)
@@ -63,7 +65,7 @@ class RealtimeSpeechRecognizer:
         temp_wav.close()
         try:
             sf.write(temp_path, audio, self.sample_rate)
-            result = self.whisper_model.transcribe(str(temp_path), language=None, fp16=False)
+            result = self.whisper_model.transcribe(str(temp_path), language=None, fp16=self.whisper_fp16)
             return str(result.get("text", "")).strip()
         finally:
             temp_path.unlink(missing_ok=True)
