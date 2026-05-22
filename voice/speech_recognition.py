@@ -16,12 +16,14 @@ class RealtimeSpeechRecognizer:
         self,
         wake_words: list[str],
         on_text: Callable[[str], None],
+        on_error: Optional[Callable[[str], None]] = None,
         sample_rate: int = 16000,
         chunk_seconds: float = 3.2,
         whisper_fp16: bool = False,
     ):
         self.wake_words = [word.lower() for word in wake_words]
         self.on_text = on_text
+        self.on_error = on_error or (lambda msg: None)
         self.sample_rate = sample_rate
         self.chunk_seconds = chunk_seconds
         self.whisper_fp16 = whisper_fp16
@@ -51,8 +53,9 @@ class RealtimeSpeechRecognizer:
                 frames = int(self.chunk_seconds * self.sample_rate)
                 audio = self.sounddevice.rec(frames, samplerate=self.sample_rate, channels=1, dtype="float32")
                 self.sounddevice.wait()
-                self._queue.put_nowait(audio[:, 0].copy())
+                self._queue.put(audio[:, 0].copy(), timeout=0.3)
             except queue.Full:
+                self.on_error("Audio pipeline busy, dropping one voice chunk.")
                 continue
             except Exception:
                 time.sleep(0.4)

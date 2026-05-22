@@ -69,8 +69,14 @@ class TextToSpeechEngine:
                 temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
                 temp_path = Path(temp_file.name)
                 temp_file.close()
-                communicate = edge_tts.Communicate(text=request.text, voice=request.voice or self._profile_voice)
-                await communicate.save(str(temp_path))
+                try:
+                    communicate = edge_tts.Communicate(
+                        text=request.text, voice=request.voice or self._profile_voice
+                    )
+                    await communicate.save(str(temp_path))
+                except Exception:
+                    temp_path.unlink(missing_ok=True)
+                    raise
                 return temp_path
 
             audio_path = asyncio.run(_generate())

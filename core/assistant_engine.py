@@ -32,7 +32,10 @@ class AssistantEngine:
         self.current_voice = config.voice_profiles["friendly"].tts_voice
         self.tts.set_voice(self.current_voice)
         self.recognizer = RealtimeSpeechRecognizer(
-            config.wake_words, self._handle_raw_speech, whisper_fp16=config.whisper_fp16
+            config.wake_words,
+            self._handle_raw_speech,
+            on_error=lambda message: self.publish("system", message),
+            whisper_fp16=config.whisper_fp16,
         )
 
     def start(self) -> None:
@@ -103,7 +106,7 @@ class AssistantEngine:
         if intent == "play_music":
             return "Spotify control module ready hai. 'Spotify play <song>' bolo."
         if intent == "screenshot":
-            output = self.config.data_dir / f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+            output = self.config.data_dir / f"screenshot_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.png"
             return self.system.capture_screenshot(output)
         if intent == "screen_summary":
             output = self.config.data_dir / "latest_screen.png"

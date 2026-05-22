@@ -97,7 +97,7 @@ class AriaMainWindow(QFrame):
         quick = QHBoxLayout()
         for text in ["Open YouTube", "Weather", "Motivate Me", "Screenshot"]:
             btn = QPushButton(text)
-            btn.clicked.connect(lambda _, t=text: self._quick_command(t))
+            btn.clicked.connect(lambda checked=False, t=text: self._quick_command(t))
             quick.addWidget(btn)
         right.addLayout(quick, stretch=1)
 

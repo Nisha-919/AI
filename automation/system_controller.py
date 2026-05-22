@@ -59,9 +59,10 @@ class SystemController:
             try:
                 import winreg
 
+                safe_app_name = app_name.replace("\\", "").replace("/", "").replace("..", "").strip()
                 registry_roots = [winreg.HKEY_CURRENT_USER, winreg.HKEY_LOCAL_MACHINE]
                 for root in registry_roots:
-                    key_path = rf"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{app_name}.exe"
+                    key_path = rf"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{safe_app_name}.exe"
                     try:
                         with winreg.OpenKey(root, key_path) as key:
                             value, _ = winreg.QueryValueEx(key, "")
