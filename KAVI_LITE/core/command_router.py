@@ -10,7 +10,10 @@ class CommandRouter:
     async def route(self, text: str) -> tuple[str, bool]:
         normalized = text.lower().strip()
 
-        if self._matches(normalized, ["screenshot", "screen shot", "screenshot lo", "screenshot le"]):
+        if self._matches(
+            normalized,
+            ["screenshot", "screen shot", "screenshot lo", "screenshot le lo", "screenshot le na"],
+        ):
             path = await asyncio.to_thread(automation.take_screenshot)
             if path:
                 return f"Screenshot saved at {path}", True
