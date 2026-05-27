@@ -7,6 +7,8 @@ import httpx
 from config.settings import GROQ_API_KEY, GROQ_API_URL, GROQ_MODEL
 from core.database import Database
 
+AUTH_SCHEME = "Bearer"
+
 
 class GroqAIEngine:
     def __init__(self, database: Database) -> None:
@@ -31,7 +33,7 @@ class GroqAIEngine:
             "max_tokens": 512,
         }
 
-        headers = {"Authorization": "Bearer " + GROQ_API_KEY}
+        headers = {"Authorization": f"{AUTH_SCHEME} {GROQ_API_KEY}"}
 
         try:
             async with httpx.AsyncClient(timeout=30) as client:

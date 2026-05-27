@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+import shlex
 import subprocess
 import sys
 import webbrowser
@@ -16,16 +17,16 @@ except ImportError:  # pragma: no cover - runtime optional
 
 def open_app(app_key: str) -> bool:
     command = APP_COMMANDS.get(app_key)
-    if not command:
+    if not command or not _is_safe_command(command):
         return False
 
     try:
         if sys.platform.startswith("win"):
-            subprocess.Popen(["cmd", "/c", "start", "", command], shell=False)
+            subprocess.Popen(command, shell=False)
         elif sys.platform == "darwin":
             subprocess.Popen(["open", "-a", command])
         else:
-            subprocess.Popen([command])
+            subprocess.Popen(shlex.split(command))
         return True
     except OSError:
         return False
@@ -54,3 +55,7 @@ def take_screenshot() -> Path | None:
     image = pyautogui.screenshot()
     image.save(path)
     return path
+
+
+def _is_safe_command(command: str) -> bool:
+    return not any(char in command for char in ["&", "|", ";"])

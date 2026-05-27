@@ -57,6 +57,8 @@ assets/piper/model.onnx
 assets/piper/model.onnx.json
 ```
 
+Note: The Whisper model loads once on first use and stays in memory for the session to keep responses fast.
+
 ## Run
 ```bash
 python main.py
