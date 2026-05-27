@@ -4,6 +4,7 @@ import asyncio
 from pathlib import Path
 import subprocess
 import tempfile
+from typing import Any
 
 from config.settings import (
     LISTEN_SECONDS,
@@ -40,7 +41,7 @@ class VoiceEngine:
         if self.model is None:
             self.model = WhisperModel(WHISPER_MODEL, device="cpu", compute_type=WHISPER_COMPUTE_TYPE)
 
-    def _record_audio(self) -> "np.ndarray":
+    def _record_audio(self) -> Any:
         if sd is None or np is None:
             raise RuntimeError("sounddevice/numpy not installed.")
         samples = int(LISTEN_SECONDS * SAMPLE_RATE)
@@ -48,7 +49,7 @@ class VoiceEngine:
         sd.wait()
         return recording.flatten()
 
-    def _transcribe(self, audio: "np.ndarray") -> str:
+    def _transcribe(self, audio: Any) -> str:
         self._ensure_model()
         segments, _info = self.model.transcribe(
             audio,

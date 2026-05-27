@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from typing import Callable
 
 from config.settings import REQUIRE_WAKE_WORD, WAKE_WORDS
 from core.ai_engine import GroqAIEngine
@@ -11,7 +12,7 @@ from core.voice_engine import VoiceEngine
 
 
 class Assistant:
-    def __init__(self, on_state, on_subtitle) -> None:
+    def __init__(self, on_state: Callable[[str], None], on_subtitle: Callable[[str], None]) -> None:
         self.on_state = on_state
         self.on_subtitle = on_subtitle
         self.database = Database()
