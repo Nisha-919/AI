@@ -47,6 +47,7 @@ pip install -r requirements.txt
 Set these environment variables as needed:
 - `GROQ_API_KEY`: required for AI chat
 - `WHISPER_MODEL`: faster-whisper model name (default: `base`)
+- `WHISPER_COMPUTE_TYPE`: faster-whisper compute type (default: `int8`)
 - `PIPER_MODEL_PATH` and `PIPER_CONFIG_PATH`: paths to Piper model files
 - `CHROME_CMD`, `VSCODE_CMD`: override app launch commands
 
@@ -66,6 +67,8 @@ python main.py
 pip install pyinstaller
 build_exe.bat
 ```
+
+Note: The `piper-tts` package installs the `piper` CLI/module, which is why the build script includes a `piper` hidden import.
 
 ## File Guide (explanations)
 - `main.py`: Application entry point. Initializes the QML UI, connects async loop, and starts the assistant.

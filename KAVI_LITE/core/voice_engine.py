@@ -11,6 +11,7 @@ from config.settings import (
     PIPER_CONFIG_PATH,
     PIPER_MODEL_PATH,
     SAMPLE_RATE,
+    WHISPER_COMPUTE_TYPE,
     WHISPER_MODEL,
 )
 
@@ -37,7 +38,7 @@ class VoiceEngine:
         if WhisperModel is None:
             raise RuntimeError("faster-whisper is not installed.")
         if self.model is None:
-            self.model = WhisperModel(WHISPER_MODEL, device="cpu", compute_type="int8")
+            self.model = WhisperModel(WHISPER_MODEL, device="cpu", compute_type=WHISPER_COMPUTE_TYPE)
 
     def _record_audio(self) -> "np.ndarray":
         if sd is None or np is None:

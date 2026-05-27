@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 
 from config.settings import REQUIRE_WAKE_WORD, WAKE_WORDS
 from core.ai_engine import GroqAIEngine
@@ -18,6 +19,7 @@ class Assistant:
         self.voice_engine = VoiceEngine()
         self.command_router = CommandRouter()
         self._stop_event = asyncio.Event()
+        self._logger = logging.getLogger(__name__)
 
     def stop(self) -> None:
         self._stop_event.set()
@@ -28,8 +30,9 @@ class Assistant:
             self.on_state("Listening")
             try:
                 text = await self.voice_engine.listen()
-            except Exception as exc:  # pragma: no cover - runtime optional
-                self.on_subtitle(f"Voice input unavailable: {exc}")
+            except Exception:  # pragma: no cover - runtime optional
+                self._logger.exception("Voice input failed")
+                self.on_subtitle("Voice input is currently unavailable. Please check your microphone.")
                 await asyncio.sleep(2)
                 continue
 

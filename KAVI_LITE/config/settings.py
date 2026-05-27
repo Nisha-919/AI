@@ -13,6 +13,7 @@ GROQ_API_URL = os.getenv("GROQ_API_URL", "https://api.groq.com/openai/v1/chat/co
 MAX_HISTORY = int(os.getenv("MAX_HISTORY", "8"))
 
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "base")
+WHISPER_COMPUTE_TYPE = os.getenv("WHISPER_COMPUTE_TYPE", "int8")
 LISTEN_SECONDS = float(os.getenv("LISTEN_SECONDS", "5"))
 SAMPLE_RATE = int(os.getenv("SAMPLE_RATE", "16000"))
 REQUIRE_WAKE_WORD = os.getenv("REQUIRE_WAKE_WORD", "false").lower() == "true"
