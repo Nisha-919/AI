@@ -12,7 +12,6 @@ if exist "%ICON%" set ICON_FLAG=--icon="%ICON%"
 pyinstaller --noconfirm --clean --onefile --windowed --name "%NAME%" %ICON_FLAG% ^
   --add-data "%ROOT%ui;ui" ^
   --add-data "%ROOT%assets;assets" ^
-  --add-data "%ROOT%database\kavi.db;database\kavi.db" ^
   --collect-all PySide6 ^
   --collect-all faster_whisper ^
   --hidden-import piper ^

@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Tuple
 
 from config.settings import APP_ALIASES, WEBSITE_ALIASES
 from core import automation
 
 
 class CommandRouter:
-    async def route(self, text: str) -> Tuple[str, bool]:
+    async def route(self, text: str) -> tuple[str, bool]:
         normalized = text.lower().strip()
 
         if self._matches(normalized, ["screenshot", "screen shot", "screenshot lo", "screenshot le"]):

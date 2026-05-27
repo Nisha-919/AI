@@ -79,7 +79,7 @@ build_exe.bat
 - `ui/orb.qml`: Animated glowing orb with state-driven effects.
 - `ui/subtitles.qml`: Subtitle panel for live user/assistant text.
 - `assets/`: Store optional icons, Piper models, and screenshots.
-- `database/kavi.db`: Local SQLite database file.
+- `database/kavi.db`: Local SQLite database file (auto-created if missing).
 - `config/settings.py`: Centralized configuration and command mappings.
 - `requirements.txt`: Python dependencies for the assistant.
 - `build_exe.bat`: One-file PyInstaller build script with assets/QML packaging.

@@ -31,8 +31,7 @@ class GroqAIEngine:
             "max_tokens": 512,
         }
 
-        bearer = "Bearer"
-        headers = {"Authorization": f"{bearer} {GROQ_API_KEY}"}
+        headers = {"Authorization": f"{'Bearer'} {GROQ_API_KEY}"}
 
         try:
             async with httpx.AsyncClient(timeout=30) as client:
