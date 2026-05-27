@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
+import os
 import subprocess
 import tempfile
 from typing import Any
@@ -79,8 +80,8 @@ class VoiceEngine:
 
         output_path = None
         try:
-            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
-                output_path = temp_file.name
+            fd, output_path = tempfile.mkstemp(suffix=".wav")
+            os.close(fd)
 
             command = [PIPER_BINARY, "--model", str(model_path), "--output_file", output_path]
             config_path = Path(PIPER_CONFIG_PATH)

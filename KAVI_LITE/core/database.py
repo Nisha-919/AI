@@ -8,7 +8,7 @@ class Database:
     def __init__(self, path: Path = DATABASE_PATH) -> None:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.connection = sqlite3.connect(self.path, check_same_thread=False)
+        self.connection = sqlite3.connect(self.path)
         self.connection.execute("PRAGMA journal_mode=WAL;")
         self._init_schema()
 
